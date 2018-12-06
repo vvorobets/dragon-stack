@@ -11,10 +11,15 @@ app.locals.engine = engine;
 app.use('/dragon', dragonRouter);
 app.use('/generation', generationRouter);
 
-engine.start();
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
 
-// setTimeout(() => {
-//     engine.stop();
-// }, 20000);
+    res.status(statusCode).json({
+        type: 'error', message: err.message
+
+    })
+})
+
+engine.start();
 
 module.exports = app;
